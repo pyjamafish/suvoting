@@ -11,12 +11,8 @@ func main() {
 	router := chi.NewRouter()
 
 	// 2. Register an endpoint
-	router.Get("/", func(writer http.ResponseWriter, request *http.Request) {
-		_, err := writer.Write([]byte("Hello World"))
-		if err != nil {
-			log.Println(err)
-		}
-	})
+	fileServer := http.FileServer(http.Dir("/client/build"))
+	router.Handle("/*", http.StripPrefix("/client/build/", fileServer))
 
 	// 3. Use router to start the server
 	err := http.ListenAndServe(":3000", router)
