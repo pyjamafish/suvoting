@@ -1,33 +1,26 @@
-// Adapted from https://github.com/go-chi/chi/issues/403#issuecomment-469152247
 package main
 
 import (
 	"fmt"
-	"net/http"
-	"time"
-
 	"github.com/go-chi/chi/v5"
+	"log"
+	"net/http"
 )
 
-const port = ":3333"
-
 func main() {
-	fmt.Printf("Starting Server on Port %v\n", port)
+	port := ":3000"
+	fmt.Printf("Now serving! http://localhost%s\n", port)
+
+	// 1. Create a new router
 	router := chi.NewRouter()
-	server := &http.Server{
-		Addr:         port,
-		Handler:      router,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
-	}
 
-	router.Get("/foo", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(`{ "message": "bar" }`))
-	})
-
-	fileServer := http.FileServer(http.Dir("./client/build/"))
+	// 2. Register an endpoint
+	fileServer := http.FileServer(http.Dir("./client/build"))
 	router.Handle("/*", fileServer)
 
-	panic(server.ListenAndServe())
+	// 3. Use router to start the server
+	err := http.ListenAndServe(port, router)
+	if err != nil {
+		log.Println(err)
+	}
 }
