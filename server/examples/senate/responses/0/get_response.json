@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "data": {
+    "id": 0,
+    "name": "John Smith",
+    "response": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "votes": 4
+  }
+}
