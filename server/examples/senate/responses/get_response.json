@@ -3,13 +3,13 @@
   "data": {
     "responses": [
       {
-        "id": 1,
+        "id": 0,
         "name": "John Smith",
         "response": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         "votes": 4
       },
       {
-        "id": 2,
+        "id": 1,
         "name": "Jane Doe",
         "responses": "Λορεμ ιπσθμ δολορ σιτ αμετ, ει θσθ νιηιλ εσσεντ νοστρθμ, αδ cθμ μεισ cονcεπταμ.",
         "votes": 7
