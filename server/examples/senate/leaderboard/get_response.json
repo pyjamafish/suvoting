@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "data": {
+    "leaderboard": [
+      {
+        "id": 1,
+        "name": "Jane Doe",
+        "votes": 7
+      },
+      {
+        "id": 0,
+        "name": "John Smith",
+        "votes": 4
+      }
+    ]
+  }
+}
