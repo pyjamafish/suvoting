@@ -1,19 +1,28 @@
-package main
+package server
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
+	_ "github.com/go-chi/chi"    //indirect
+	_ "github.com/go-chi/render" //indirect
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func main() {
+type AppResource struct {
+	hello  string
+	Client *mongo.Client
+}
+
+// NewAppResource creates an AppResource that's connected to the database.
+func NewAppResource() *AppResource {
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")
 	}
@@ -26,18 +35,26 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	rs := AppResource{
+		Client: client,
+	}
+	return &rs
+}
 
-	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
+// Close disconnects from the database.
+func (rs *AppResource) Close() {
+	if err := rs.Client.Disconnect(context.TODO()); err != nil {
+		panic(err)
+	}
 
-	coll := client.Database("sample_mflix").Collection("movies")
+}
+
+func (rs *AppResource) Api(w http.ResponseWriter, r *http.Request) {
+	coll := rs.Client.Database("sample_mflix").Collection("movies")
 	title := "Back to the Future"
 
 	var result bson.M
-	err = coll.FindOne(context.TODO(), bson.D{{"title", title}}).Decode(&result)
+	err := coll.FindOne(context.TODO(), bson.D{{"title", title}}).Decode(&result)
 	if err == mongo.ErrNoDocuments {
 		fmt.Printf("No document was found with the title %s\n", title)
 		return
@@ -50,5 +67,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%s\n", jsonData)
+
+	w.Header().Set("Content-Type", "application/json")
+	_, err = w.Write(jsonData)
+	if err != nil {
+		panic(err)
+	}
 }
