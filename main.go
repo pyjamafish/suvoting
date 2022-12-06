@@ -18,9 +18,10 @@ func main() {
 	// 1. Create a new router
 	router := chi.NewRouter()
 
-	// 2. Register an endpoint
+	// 2. Register endpoints for frontend files
 	fileServer := http.FileServer(http.Dir("./client/build"))
 	router.Handle("/*", fileServer)
+	// Register endpoints for backend
 	router.Get("/api", rs.Api)
 
 	// 3. Use router to start the server
