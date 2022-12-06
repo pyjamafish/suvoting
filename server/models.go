@@ -6,5 +6,5 @@ type Candidate struct {
 type LeaderboardEntry struct {
 }
 
-type Response struct {
+type Answer struct {
 }

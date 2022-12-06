@@ -5,7 +5,7 @@
       {
         "id": 0,
         "name": "John Smith",
-        "responses": [
+        "answers": [
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
           "Eget sit amet tellus cras adipiscing.",
           "",
@@ -16,7 +16,7 @@
       {
         "id": 1,
         "name": "Jane Doe",
-        "responses": [
+        "answers": [
           "Λορεμ ιπσθμ δολορ σιτ αμετ, ει θσθ νιηιλ εσσεντ νοστρθμ, αδ cθμ μεισ cονcεπταμ.",
           "",
           "Ιν cιβο ειθσ ιντελλεγεβατ προ, μει ιδ vερο ταντασ αccθσαμ.",
