@@ -12,7 +12,7 @@ func main() {
 	rs := server.NewAppResource()
 	defer rs.Close()
 
-	port := ":3000"
+	port := ":3456"
 	fmt.Printf("Now serving! http://localhost%s\n", port)
 
 	// 1. Create a new router
