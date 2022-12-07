@@ -10,9 +10,6 @@ import (
 	"vote/server"
 )
 
-func todo(w http.ResponseWriter, r *http.Request) {
-}
-
 func main() {
 	rs := server.NewAppResource()
 	defer rs.Close()
@@ -35,7 +32,7 @@ func main() {
 			router.Use(server.BranchCtx)
 			router.Route("/candidates", func(router chi.Router) {
 				router.Get("/", rs.GetCandidates)
-				router.Post("/", todo)
+				router.Post("/", rs.PostCandidates)
 			})
 		})
 	})

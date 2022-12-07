@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
@@ -80,6 +81,7 @@ func randomize[T any](x []T) {
 	})
 }
 
+// GetCandidates renders the JSON for the candidates/ endpoint.
 func (rs *AppResource) GetCandidates(w http.ResponseWriter, r *http.Request) {
 	branch := r.Context().Value("branch").(string)
 	collection := rs.Db().Collection(branch)
@@ -107,4 +109,36 @@ func (rs *AppResource) GetCandidates(w http.ResponseWriter, r *http.Request) {
 		"candidates": candidates,
 	}
 	render.Render(w, r, NewResponseSuccess(data))
+}
+
+// PostCandidates takes in a candidate JSON and inserts them into the database.
+func (rs *AppResource) PostCandidates(w http.ResponseWriter, r *http.Request) {
+	data := &CandidateRequest{}
+	err := render.Bind(r, data)
+	if errors.Is(err, ErrMissingName) {
+		render.Render(w, r, NewResponseFail(map[string]string{"name": err.Error()}))
+		return
+	}
+	if errors.Is(err, ErrMissingAnswers) {
+		render.Render(w, r, NewResponseFail(map[string]string{"answers": err.Error()}))
+		return
+	}
+
+	branch := r.Context().Value("branch").(string)
+	collection := rs.Db().Collection(branch)
+	_, err = collection.InsertOne(
+		r.Context(),
+		bson.D{
+			{"name", data.Name},
+			{"answers", data.Answers},
+			{"votes", 0},
+		},
+	)
+	if err != nil {
+		render.Render(w, r, NewErrorResponse("There was an error adding the candidate to the database."))
+		return
+	}
+
+	render.Status(r, http.StatusCreated)
+	render.Render(w, r, NewResponseSuccess(nil))
 }
