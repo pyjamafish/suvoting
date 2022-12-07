@@ -6,8 +6,10 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
@@ -70,6 +72,14 @@ func BranchCtx(next http.Handler) http.Handler {
 	})
 }
 
+// randomize randomizes a slice.
+func randomize[T any](x []T) {
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(x), func(i, j int) {
+		x[i], x[j] = x[j], x[i]
+	})
+}
+
 func (rs *AppResource) GetCandidates(w http.ResponseWriter, r *http.Request) {
 	branch := r.Context().Value("branch").(string)
 	collection := rs.Db().Collection(branch)
@@ -92,6 +102,7 @@ func (rs *AppResource) GetCandidates(w http.ResponseWriter, r *http.Request) {
 
 		candidates = append(candidates, candidate)
 	}
+	randomize(candidates)
 	data := map[string]any{
 		"candidates": candidates,
 	}
