@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 )
@@ -60,5 +61,24 @@ func NewErrorResponse(message string) *ErrorResponse {
 }
 
 func (response *ErrorResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
+	return nil
+}
+
+type CandidateRequest struct {
+	Name    string   `json:"name"`
+	Answers []string `json:"answers"`
+}
+
+var ErrMissingName = errors.New("missing name")
+var ErrMissingAnswers = errors.New("missing answers")
+
+func (request *CandidateRequest) Bind(r *http.Request) error {
+	if request.Name == "" {
+		return ErrMissingName
+	}
+	if request.Answers == nil {
+		return ErrMissingAnswers
+	}
+
 	return nil
 }

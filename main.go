@@ -3,14 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
 	"log"
 	"net/http"
 	"vote/server"
 )
-
-func todo(w http.ResponseWriter, r *http.Request) {
-}
 
 func main() {
 	rs := server.NewAppResource()
@@ -21,10 +19,12 @@ func main() {
 
 	// 1. Create a new router
 	router := chi.NewRouter()
+	router.Use(cors.AllowAll().Handler)
 
 	// 2. Register endpoints for frontend files
 	fileServer := http.FileServer(http.Dir("./client/build"))
 	router.Handle("/*", fileServer)
+
 	// Register endpoints for backend
 	router.Route("/api", func(router chi.Router) {
 		router.Use(render.SetContentType(render.ContentTypeJSON))
@@ -32,7 +32,7 @@ func main() {
 			router.Use(server.BranchCtx)
 			router.Route("/candidates", func(router chi.Router) {
 				router.Get("/", rs.GetCandidates)
-				router.Post("/", todo)
+				router.Post("/", rs.PostCandidates)
 			})
 		})
 	})
