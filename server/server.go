@@ -142,3 +142,19 @@ func (rs *AppResource) PostCandidates(w http.ResponseWriter, r *http.Request) {
 	render.Status(r, http.StatusCreated)
 	render.Render(w, r, NewResponseSuccess(nil))
 }
+
+func (rs *AppResource) PatchVotes(w http.ResponseWriter, r *http.Request) {
+	render.Render(w, r, NewErrorResponse("Not implemented yet"))
+}
+
+func (rs *AppResource) GetAnswers(w http.ResponseWriter, r *http.Request) {
+	render.Render(w, r, NewErrorResponse("Not implemented yet"))
+}
+
+func (rs *AppResource) GetLeaderboard(w http.ResponseWriter, r *http.Request) {
+	render.Render(w, r, NewErrorResponse("Not implemented yet"))
+}
+
+func (rs *AppResource) GetQuestions(w http.ResponseWriter, r *http.Request) {
+	render.Render(w, r, NewErrorResponse("Not implemented yet"))
+}
