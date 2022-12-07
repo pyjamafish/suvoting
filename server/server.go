@@ -192,7 +192,32 @@ func (rs *AppResource) GetAnswers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rs *AppResource) GetLeaderboard(w http.ResponseWriter, r *http.Request) {
-	render.Render(w, r, NewErrorResponse("Not implemented yet"))
+	branch := r.Context().Value("branch").(string)
+	collection := rs.Db().Collection(branch)
+
+	opts := options.Find().SetSort(bson.D{{"votes", -1}})
+	cur, err := collection.Find(r.Context(), bson.D{}, opts)
+	if err != nil {
+		render.Render(w, r, NewErrorResponse("Could not get cursor from db"))
+		return
+	}
+	defer cur.Close(r.Context())
+
+	var leaderboardEntries []LeaderboardEntry
+	for cur.Next(r.Context()) {
+		leaderboardEntry := LeaderboardEntry{}
+		err := cur.Decode(&leaderboardEntry)
+		if err != nil {
+			render.Render(w, r, NewErrorResponse("Could not decode into leaderboard entry"))
+			return
+		}
+
+		leaderboardEntries = append(leaderboardEntries, leaderboardEntry)
+	}
+	data := map[string]any{
+		"leaderboard": leaderboardEntries,
+	}
+	render.Render(w, r, NewResponseSuccess(data))
 }
 
 func (rs *AppResource) GetQuestions(w http.ResponseWriter, r *http.Request) {
