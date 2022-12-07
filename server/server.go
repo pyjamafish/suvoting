@@ -60,6 +60,7 @@ func (rs *AppResource) Db() *mongo.Database {
 	return rs.Client.Database("voting")
 }
 
+// BranchCtx checks if the branch is either "senate" or "treasury", and sets the context value.
 func BranchCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var branch string
@@ -86,7 +87,8 @@ func randomize[T any](x []T) {
 	})
 }
 
-// GetCandidates renders the JSON for the candidates/ endpoint.
+// GetCandidates renders all the candidates.
+// The order of the candidates is randomized.
 func (rs *AppResource) GetCandidates(w http.ResponseWriter, r *http.Request) {
 	branch := r.Context().Value("branch").(string)
 	collection := rs.Db().Collection(branch)
@@ -148,6 +150,7 @@ func (rs *AppResource) PostCandidates(w http.ResponseWriter, r *http.Request) {
 	render.Render(w, r, NewResponseSuccess(nil))
 }
 
+// PatchVotes increments a candidate's votes by one.
 func (rs *AppResource) PatchVotes(w http.ResponseWriter, r *http.Request) {
 	id, err := primitive.ObjectIDFromHex(chi.URLParam(r, "id"))
 	if err != nil {
@@ -174,6 +177,8 @@ func (rs *AppResource) PatchVotes(w http.ResponseWriter, r *http.Request) {
 	render.Render(w, r, NewResponseSuccess(nil))
 }
 
+// GetAnswers renders everyone's answers grouped by question.
+// The order within each question is randomized.
 func (rs *AppResource) GetAnswers(w http.ResponseWriter, r *http.Request) {
 	branch := r.Context().Value("branch").(string)
 	collection := rs.Db().Collection(branch)
@@ -214,6 +219,7 @@ func (rs *AppResource) GetAnswers(w http.ResponseWriter, r *http.Request) {
 	render.Render(w, r, NewResponseSuccess(data))
 }
 
+// GetLeaderboard renders the list of candidates sorted from most to least votes.
 func (rs *AppResource) GetLeaderboard(w http.ResponseWriter, r *http.Request) {
 	branch := r.Context().Value("branch").(string)
 	collection := rs.Db().Collection(branch)
@@ -243,6 +249,7 @@ func (rs *AppResource) GetLeaderboard(w http.ResponseWriter, r *http.Request) {
 	render.Render(w, r, NewResponseSuccess(data))
 }
 
+// GetQuestions renders the list of questions.
 func (rs *AppResource) GetQuestions(w http.ResponseWriter, r *http.Request) {
-	render.Render(w, r, NewErrorResponse("Not implemented yet"))
+	render.Render(w, r, NewErrorResponse("Not implemented"))
 }
