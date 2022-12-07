@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"math/rand"
 	"net/http"
@@ -148,7 +149,29 @@ func (rs *AppResource) PostCandidates(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rs *AppResource) PatchVotes(w http.ResponseWriter, r *http.Request) {
-	render.Render(w, r, NewErrorResponse("Not implemented yet"))
+	id, err := primitive.ObjectIDFromHex(chi.URLParam(r, "id"))
+	if err != nil {
+		render.Render(w, r, NewErrorResponse("Could not get ObjectID"))
+		return
+	}
+
+	branch := r.Context().Value("branch").(string)
+	collection := rs.Db().Collection(branch)
+
+	_, err = collection.UpdateOne(
+		r.Context(),
+		bson.M{
+			"_id": id,
+		},
+		bson.D{
+			{"$inc", bson.D{{"votes", 1}}},
+		},
+	)
+	if err != nil {
+		render.Render(w, r, NewErrorResponse("Could not increment votes"))
+		return
+	}
+	render.Render(w, r, NewResponseSuccess(nil))
 }
 
 func (rs *AppResource) GetAnswers(w http.ResponseWriter, r *http.Request) {

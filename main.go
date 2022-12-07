@@ -33,7 +33,7 @@ func main() {
 			router.Route("/candidates", func(router chi.Router) {
 				router.Get("/", rs.GetCandidates)
 				router.Post("/", rs.PostCandidates)
-				router.Route("/{_id}", func(router chi.Router) {
+				router.Route("/{id}", func(router chi.Router) {
 					router.Route("/votes", func(router chi.Router) {
 						router.Patch("/", rs.PatchVotes)
 					})
