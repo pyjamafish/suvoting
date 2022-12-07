@@ -24,7 +24,6 @@ const (
 )
 
 type AppResource struct {
-	hello  string
 	Client *mongo.Client
 }
 
