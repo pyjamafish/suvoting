@@ -18,6 +18,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+const (
+	questionCount = 4
+)
+
 type AppResource struct {
 	hello  string
 	Client *mongo.Client
@@ -148,7 +152,43 @@ func (rs *AppResource) PatchVotes(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rs *AppResource) GetAnswers(w http.ResponseWriter, r *http.Request) {
-	render.Render(w, r, NewErrorResponse("Not implemented yet"))
+	branch := r.Context().Value("branch").(string)
+	collection := rs.Db().Collection(branch)
+
+	cur, err := collection.Find(r.Context(), bson.D{})
+	if err != nil {
+		render.Render(w, r, NewErrorResponse("Could not get cursor from db"))
+		return
+	}
+	defer cur.Close(r.Context())
+
+	var answers [questionCount][]Answer
+	for cur.Next(r.Context()) {
+		candidate := Candidate{}
+		err := cur.Decode(&candidate)
+		if err != nil {
+			render.Render(w, r, NewErrorResponse("Could not decode into candidate"))
+			return
+		}
+
+		for i := 0; i < questionCount; i++ {
+			answer := Answer{
+				Id:     candidate.Id,
+				Name:   candidate.Name,
+				Votes:  candidate.Votes,
+				Answer: candidate.Answers[i],
+			}
+			answers[i] = append(answers[i], answer)
+		}
+	}
+	for i := 0; i < questionCount; i++ {
+		randomize(answers[i])
+	}
+
+	data := map[string]any{
+		"answers": answers,
+	}
+	render.Render(w, r, NewResponseSuccess(data))
 }
 
 func (rs *AppResource) GetLeaderboard(w http.ResponseWriter, r *http.Request) {
