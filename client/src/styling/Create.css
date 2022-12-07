@@ -1,0 +1,39 @@
+/* Styling for Create.js */
+
+.name-text {
+    margin-bottom: 3vh;
+}
+
+.button-container {
+    margin-bottom: 5vh;
+    display: flex;
+    width: 40vw;
+}
+
+#create-div {
+    margin-left: 15vw;
+    margin-right: 15vw;
+}
+
+.create-button {
+    background-color: rgb(165, 20, 23);
+    width: 12vw;
+    height: 4vw;
+    line-height: 4vw;
+    text-align: center;
+    color: white;
+    border-radius: 4px;
+    font-size: 1.6vw;
+    font-weight: bold;
+    margin-top: 2vw;
+    margin-right: 3vw;
+    border-width: 0px;
+}
+
+.create-link {
+    text-decoration: none;
+}
+
+.create-button:hover {
+    background-color: rgb(210, 53, 55);
+}
