@@ -1,3 +1,5 @@
+// Package main defines the entry point to the program.
+// It contains the code to start the server and the routing logic.
 package main
 
 import (

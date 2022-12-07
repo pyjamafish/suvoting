@@ -1,3 +1,4 @@
+// Package server defines the models and handler functions used on the server side.
 package server
 
 import (
