@@ -1,6 +1,9 @@
 package server
 
-import "net/http"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"net/http"
+)
 
 type JSendStatus string
 
@@ -11,23 +14,23 @@ const (
 )
 
 type Candidate struct {
-	Id      int32    `json:"id"`
-	Name    string   `json:"name"`
-	Votes   int32    `json:"votes"`
-	Answers []string `json:"answers"`
+	Id      primitive.ObjectID `json:"_id" bson:"_id"`
+	Name    string             `json:"name"`
+	Votes   int32              `json:"votes"`
+	Answers []string           `json:"answers"`
 }
 
 type LeaderboardEntry struct {
-	Id    int32  `json:"id"`
-	Name  string `json:"name"`
-	Votes int32  `json:"votes"`
+	Id    primitive.ObjectID `json:"_id" bson:"_id"`
+	Name  string             `json:"name"`
+	Votes int32              `json:"votes"`
 }
 
 type Answer struct {
-	Id     int32  `json:"id"`
-	Name   string `json:"name"`
-	Votes  int32  `json:"votes"`
-	Answer string `json:"answer"`
+	Id     primitive.ObjectID `json:"_id" bson:"_id"`
+	Name   string             `json:"name"`
+	Votes  int32              `json:"votes"`
+	Answer string             `json:"answer"`
 }
 
 type Response struct {
