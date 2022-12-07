@@ -73,7 +73,6 @@ class Vote extends React.Component {
         
         alert("Your vote was counted!")
         event.preventDefault();
-        window.location.href = "http://ec2-54-243-4-131.compute-1.amazonaws.com:3456/";
     }
 
     render() {

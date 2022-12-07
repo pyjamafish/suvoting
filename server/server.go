@@ -126,7 +126,7 @@ func (rs *AppResource) PostCandidates(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, NewResponseFail(map[string]string{"name": err.Error()}))
 		return
 	}
-	if errors.Is(err, ErrMissingAnswers) {
+	if errors.Is(err, ErrMissingAnswers) || errors.Is(err, ErrAnswersTooLong) {
 		render.Render(w, r, NewResponseFail(map[string]string{"answers": err.Error()}))
 		return
 	}

@@ -6,6 +6,10 @@ import (
 	"net/http"
 )
 
+const (
+	AnswerMaxLength = 280
+)
+
 type JSendStatus string
 
 const (
@@ -71,6 +75,7 @@ type CandidateRequest struct {
 
 var ErrMissingName = errors.New("missing name")
 var ErrMissingAnswers = errors.New("missing answers")
+var ErrAnswersTooLong = errors.New("one or more answers are too long")
 
 func (request *CandidateRequest) Bind(r *http.Request) error {
 	if request.Name == "" {
@@ -78,6 +83,11 @@ func (request *CandidateRequest) Bind(r *http.Request) error {
 	}
 	if request.Answers == nil {
 		return ErrMissingAnswers
+	}
+	for _, answer := range request.Answers {
+		if len(answer) > AnswerMaxLength {
+			return ErrAnswersTooLong
+		}
 	}
 
 	return nil

@@ -4,6 +4,8 @@ import "../styling/Create.css";
 import React from 'react';
 import { Link, useNavigate } from "react-router-dom";
 
+let answerMaxLength = 280;
+
 class Create extends React.Component {
     constructor(props) {
         super(props);
@@ -85,7 +87,6 @@ class SenateQuestions extends React.Component {
         });
 
         event.preventDefault();
-        window.location.href = "http://ec2-54-243-4-131.compute-1.amazonaws.com:3456/";
     }
 
     render() {
@@ -95,16 +96,16 @@ class SenateQuestions extends React.Component {
                 <input type="text" className="name-text" name="name"/><br/>
 
                 <label for="q1">1) Why are you running for Senate?</label><br/>
-                <textarea type="text" className="question-box" id="q1" name="q1" cols="60" rows="5"/><br/>
+                <textarea type="text" className="question-box" id="q1" name="q1" cols="60" rows="5" maxLength={answerMaxLength}/><br/>
 
                 <label for="q2">2) Where do you think Senate has room for improvement in the coming year?</label><br/>
-                <textarea type="text" className="question-box" id="q2" name="q2" cols="60" rows="5"/><br/>
+                <textarea type="text" className="question-box" id="q2" name="q2" cols="60" rows="5" maxLength={answerMaxLength}/><br/>
 
                 <label for="q3">3) What do you think Senate's role is in ensuring students mental wellness, and where is there room for improvement?</label><br/>
-                <textarea type="text" className="question-box" id="q3" name="q3" cols="60" rows="5"/><br/>
+                <textarea type="text" className="question-box" id="q3" name="q3" cols="60" rows="5" maxLength={answerMaxLength}/><br/>
 
                 <label for="q4">4) How can WUPD's practices be improved to ensure student safety? How would you go about working with WUPD to adjust these practices to better protect students?</label><br/>
-                <textarea type="text" className="question-box" id="q4" name="q4" cols="60" rows="5"/><br/>
+                <textarea type="text" className="question-box" id="q4" name="q4" cols="60" rows="5" maxLength={answerMaxLength}/><br/>
             
                 <div className="button-container">
                     <Link to="/" className="link">
@@ -162,16 +163,16 @@ class TreasuryQuestions extends React.Component {
                 <input type="text" className="name-text" name="name"/><br/>
                 
                 <label for="q1">1) Why are you running for Treasury?</label><br/>
-                <textarea type="text" className="question-box" id="q1" name="q1" cols="60" rows="5"/><br/>
+                <textarea type="text" className="question-box" id="q1" name="q1" cols="60" rows="5" maxLength={answerMaxLength}/><br/>
 
                 <label for="q2">2) Where do you think Treasury has room for improvement in the coming year?</label><br/>
-                <textarea type="text" className="question-box" id="q2" name="q2" cols="60" rows="5"/><br/>
+                <textarea type="text" className="question-box" id="q2" name="q2" cols="60" rows="5" maxLength={answerMaxLength}/><br/>
 
                 <label for="q3">3) In your opinion, what does equitable funding mean?</label><br/>
-                <textarea type="text" className="question-box" id="q3" name="q3" cols="60" rows="5"/><br/>
+                <textarea type="text" className="question-box" id="q3" name="q3" cols="60" rows="5" maxLength={answerMaxLength}/><br/>
 
                 <label for="q4">4) How would you address the communication gap that currently exists between Treasury and student groups?</label><br/>
-                <textarea type="text" className="question-box" id="q4" name="q4" cols="60" rows="5"/><br/>
+                <textarea type="text" className="question-box" id="q4" name="q4" cols="60" rows="5" maxLength={answerMaxLength}/><br/>
             
                 <div className="button-container">
                     <Link to="/" className="link">
