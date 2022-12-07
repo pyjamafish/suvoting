@@ -1,0 +1,24 @@
+/* Styling for Vote.js */
+
+#vote-container {
+    display: flex;
+}
+
+#cand-panel {
+    width: 60vw;
+    padding: 2vw;
+}
+
+#vote-panel {
+    width: 40vw;
+    padding: 2vw;
+    background-color: rgb(165, 20, 23);
+    color: white;
+}
+
+.candidate-div {
+    background-color: white;
+    padding: 1vw;
+    margin-bottom: 4vh;
+    border-radius: 10px;
+}
