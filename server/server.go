@@ -2,16 +2,13 @@ package server
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"log"
 	"net/http"
 	"os"
 
-	_ "github.com/go-chi/chi"    //indirect
-	_ "github.com/go-chi/render" //indirect
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -50,6 +47,11 @@ func (rs *AppResource) Close() {
 	}
 }
 
+// Db returns the database we're interested in.
+func (rs *AppResource) Db() *mongo.Database {
+	return rs.Client.Database("voting")
+}
+
 func BranchCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var branch string
@@ -60,6 +62,7 @@ func BranchCtx(next http.Handler) http.Handler {
 				"message": fmt.Sprintf(`Invalid branch "%s"; must be either "senate" or "treasury"`, branch),
 			}
 			render.Render(w, r, NewResponseFail(data))
+			return
 		}
 
 		ctx := context.WithValue(r.Context(), "branch", branch)
@@ -67,28 +70,30 @@ func BranchCtx(next http.Handler) http.Handler {
 	})
 }
 
-func (rs *AppResource) Api(w http.ResponseWriter, r *http.Request) {
-	coll := rs.Client.Database("sample_mflix").Collection("movies")
-	title := "Back to the Future"
+func (rs *AppResource) GetCandidates(w http.ResponseWriter, r *http.Request) {
+	branch := r.Context().Value("branch").(string)
+	collection := rs.Db().Collection(branch)
 
-	var result bson.M
-	err := coll.FindOne(context.TODO(), bson.D{{"title", title}}).Decode(&result)
-	if err == mongo.ErrNoDocuments {
-		fmt.Printf("No document was found with the title %s\n", title)
+	cur, err := collection.Find(r.Context(), bson.D{})
+	if err != nil {
+		render.Render(w, r, NewErrorResponse("Could not get cursor from db"))
 		return
 	}
-	if err != nil {
-		panic(err)
-	}
+	defer cur.Close(r.Context())
 
-	jsonData, err := json.MarshalIndent(result, "", "    ")
-	if err != nil {
-		panic(err)
-	}
+	var candidates []Candidate
+	for cur.Next(r.Context()) {
+		candidate := Candidate{}
+		err := cur.Decode(&candidate)
+		if err != nil {
+			render.Render(w, r, NewErrorResponse("Could not decode into candidate"))
+			return
+		}
 
-	w.Header().Set("Content-Type", "application/json")
-	_, err = w.Write(jsonData)
-	if err != nil {
-		panic(err)
+		candidates = append(candidates, candidate)
 	}
+	data := map[string]any{
+		"candidates": candidates,
+	}
+	render.Render(w, r, NewResponseSuccess(data))
 }

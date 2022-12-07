@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/render"
 	"log"
 	"net/http"
 	"vote/server"
@@ -26,10 +27,11 @@ func main() {
 	router.Handle("/*", fileServer)
 	// Register endpoints for backend
 	router.Route("/api", func(router chi.Router) {
+		router.Use(render.SetContentType(render.ContentTypeJSON))
 		router.Route("/{branch}", func(router chi.Router) {
 			router.Use(server.BranchCtx)
 			router.Route("/candidates", func(router chi.Router) {
-				router.Get("/", todo)
+				router.Get("/", rs.GetCandidates)
 				router.Post("/", todo)
 			})
 		})

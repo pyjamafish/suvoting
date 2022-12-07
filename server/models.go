@@ -55,3 +55,7 @@ type ErrorResponse struct {
 func NewErrorResponse(message string) *ErrorResponse {
 	return &ErrorResponse{Status: Error, Message: message}
 }
+
+func (response *ErrorResponse) Render(_ http.ResponseWriter, _ *http.Request) error {
+	return nil
+}

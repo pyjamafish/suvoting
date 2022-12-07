@@ -5,24 +5,24 @@
       {
         "id": 0,
         "name": "John Smith",
+        "votes": 4,
         "answers": [
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
           "Eget sit amet tellus cras adipiscing.",
           "",
           "Odio facilisis mauris sit amet massa. Sed lectus vestibulum mattis ullamcorper velit sed ullamcorper."
-        ],
-        "votes": 4
+        ]
       },
       {
         "id": 1,
         "name": "Jane Doe",
+        "votes": 7,
         "answers": [
           "Λορεμ ιπσθμ δολορ σιτ αμετ, ει θσθ νιηιλ εσσεντ νοστρθμ, αδ cθμ μεισ cονcεπταμ.",
           "",
           "Ιν cιβο ειθσ ιντελλεγεβατ προ, μει ιδ vερο ταντασ αccθσαμ.",
           "Εξ σεδ αccθσαμθσ περτιναcια cομπλεcτιτθρ, ει θβιqθε qθοδσι vισ. Αφφερτ μολλισ qθι αδ, μθcιθσ ιμπεδιτ νεc τε."
-        ],
-        "votes": 7
+        ]
       }
     ]
   }
