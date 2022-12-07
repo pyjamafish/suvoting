@@ -2,7 +2,7 @@
 
 import "../styling/Create.css";
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 class Create extends React.Component {
     constructor(props) {
@@ -61,13 +61,31 @@ class SenateQuestions extends React.Component {
 
     handleSubmit(event) {
         const name = event.target.name.value;
-        const responses = [event.target.q1.value, event.target.q2.value, event.target.q3.value, event.target.q4.value];
+        const answers = [event.target.q1.value, event.target.q2.value, event.target.q3.value, event.target.q4.value];
         const data = {
             name: name,
-            responses: responses
+            answers: answers
         };
         console.log(data);
+
+        fetch('http://ec2-54-243-4-131.compute-1.amazonaws.com:3456/api/senate/candidates', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log('Success:', data);
+            alert("Sucessfully created profile");
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+
         event.preventDefault();
+        window.location.href = "http://ec2-54-243-4-131.compute-1.amazonaws.com:3456/";
     }
 
     render() {
@@ -108,14 +126,33 @@ class TreasuryQuestions extends React.Component {
     }
 
     handleSubmit(event) {
+        console.log("bruh");
         const name = event.target.name.value;
-        const responses = [event.target.q1.value, event.target.q2.value, event.target.q3.value, event.target.q4.value];
+        const answers = [event.target.q1.value, event.target.q2.value, event.target.q3.value, event.target.q4.value];
         const data = {
             name: name,
-            responses: responses
+            answers: answers
         };
         console.log(data);
+
+        fetch('http://ec2-54-243-4-131.compute-1.amazonaws.com:3456/api/treasury/candidates', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log('Success:', data);
+            alert("Sucessfully created profile");
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+
         event.preventDefault();
+        window.location.href = "http://ec2-54-243-4-131.compute-1.amazonaws.com:3456/";
     }
 
     render() {

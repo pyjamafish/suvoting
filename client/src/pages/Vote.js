@@ -32,7 +32,6 @@ class Vote extends React.Component {
         .then(res => res.json())
         .then(
             (result) => {
-                console.log(result.data.candidates);
                 this.setState({
                     treasuryCandidates: result.data.candidates
                 });
@@ -44,7 +43,37 @@ class Vote extends React.Component {
     }
 
     handleSubmit(event) {
+        for (var i = 0; i < event.target.senate.length; ++i) {
+            if (event.target.senate[i].checked) {
+                fetch("http://ec2-54-243-4-131.compute-1.amazonaws.com:3456/api/senate/candidates/" + event.target.senate[i].value + "/votes", {
+                    method: 'PATCH'
+                })
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                        console.log(result);
+                    }
+                );
+            }
+        }
+
+        for (var i = 0; i < event.target.treasury.length; ++i) {
+            if (event.target.treasury[i].checked) {
+                fetch("http://ec2-54-243-4-131.compute-1.amazonaws.com:3456/api/treasury/candidates/" + event.target.treasury[i].value + "/votes", {
+                    method: 'PATCH'
+                })
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                        console.log(result);
+                    }
+                );
+            }
+        }
+        
+        alert("Your vote was counted!")
         event.preventDefault();
+        window.location.href = "http://ec2-54-243-4-131.compute-1.amazonaws.com:3456/";
     }
 
     render() {
@@ -59,6 +88,7 @@ class Vote extends React.Component {
                                 <Candidate
                                     name={candidate.name}
                                     answers={candidate.answers}
+                                    votes={candidate.votes}
                                 />
                             ))}
                         </div>
@@ -73,6 +103,7 @@ class Vote extends React.Component {
                                 <Candidate
                                     name={candidate.name}
                                     answers={candidate.answers}
+                                    votes={candidate.votes}
                                 />
                             ))}
                         </div>
@@ -88,7 +119,7 @@ class Vote extends React.Component {
                             <div>
                                 {this.state.senateCandidates.map((candidate) => (
                                     <div>
-                                        <input type="checkbox" name="senate-pick" value={candidate._id}/>
+                                        <input type="checkbox" name="senate" value={candidate._id}/>
                                         <label for={candidate._id}>{candidate.name}</label>
                                     </div>
                                 ))}
@@ -101,7 +132,7 @@ class Vote extends React.Component {
                             <div>
                                 {this.state.treasuryCandidates.map((candidate) => (
                                     <div>
-                                        <input type="checkbox" name="treasury-pick" value={candidate._id}/>
+                                        <input type="checkbox" name="treasury" value={candidate._id}/>
                                         <label for={candidate._id}>{candidate.name}</label>
                                     </div>
                                 ))}
@@ -130,9 +161,6 @@ function Candidate(props) {
                     </li>
                 ))}
             </ul>
-            <p>
-                {props.responses}
-            </p>
         </div>
     );
 }
