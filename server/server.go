@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/render"
 	"log"
 	"net/http"
 	"os"
@@ -46,7 +48,23 @@ func (rs *AppResource) Close() {
 	if err := rs.Client.Disconnect(context.TODO()); err != nil {
 		panic(err)
 	}
+}
 
+func BranchCtx(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var branch string
+
+		branch = chi.URLParam(r, "branch")
+		if branch != "senate" && branch != "treasury" {
+			data := map[string]string{
+				"message": fmt.Sprintf(`Invalid branch "%s"; must be either "senate" or "treasury"`, branch),
+			}
+			render.Render(w, r, NewResponseFail(data))
+		}
+
+		ctx := context.WithValue(r.Context(), "branch", branch)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }
 
 func (rs *AppResource) Api(w http.ResponseWriter, r *http.Request) {

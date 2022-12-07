@@ -8,6 +8,9 @@ import (
 	"vote/server"
 )
 
+func todo(w http.ResponseWriter, r *http.Request) {
+}
+
 func main() {
 	rs := server.NewAppResource()
 	defer rs.Close()
@@ -22,7 +25,15 @@ func main() {
 	fileServer := http.FileServer(http.Dir("./client/build"))
 	router.Handle("/*", fileServer)
 	// Register endpoints for backend
-	router.Get("/api", rs.Api)
+	router.Route("/api", func(router chi.Router) {
+		router.Route("/{branch}", func(router chi.Router) {
+			router.Use(server.BranchCtx)
+			router.Route("/candidates", func(router chi.Router) {
+				router.Get("/", todo)
+				router.Post("/", todo)
+			})
+		})
+	})
 
 	// 3. Use router to start the server
 	err := http.ListenAndServe(port, router)
