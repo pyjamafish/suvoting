@@ -1,4 +1,4 @@
-module vote
+module suelections
 
 go 1.19
 

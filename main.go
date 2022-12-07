@@ -9,7 +9,7 @@ import (
 	"github.com/go-chi/render"
 	"log"
 	"net/http"
-	"vote/server"
+	"suelections/server"
 )
 
 func main() {
