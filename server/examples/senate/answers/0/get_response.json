@@ -1,0 +1,19 @@
+{
+  "status": "success",
+  "data": {
+    "answers": [
+      {
+        "_id": "638cff485deac9d416dc2f4b",
+        "name": "John Smith",
+        "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "votes": 4
+      },
+      {
+        "_id": "638cff485deac9d416dc2f4c",
+        "name": "Jane Doe",
+        "answer": "Λορεμ ιπσθμ δολορ σιτ αμετ, ει θσθ νιηιλ εσσεντ νοστρθμ, αδ cθμ μεισ cονcεπταμ.",
+        "votes": 7
+      }
+    ]
+  }
+}

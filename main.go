@@ -33,7 +33,17 @@ func main() {
 			router.Route("/candidates", func(router chi.Router) {
 				router.Get("/", rs.GetCandidates)
 				router.Post("/", rs.PostCandidates)
+				router.Route("/{id}", func(router chi.Router) {
+					router.Route("/votes", func(router chi.Router) {
+						router.Patch("/", rs.PatchVotes)
+					})
+				})
 			})
+			router.Route("/answers", func(router chi.Router) {
+				router.Get("/", rs.GetAnswers)
+			})
+			router.Get("/leaderboard", rs.GetLeaderboard)
+			router.Get("/questions", rs.GetQuestions)
 		})
 	})
 

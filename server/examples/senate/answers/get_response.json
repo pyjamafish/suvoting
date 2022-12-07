@@ -2,18 +2,62 @@
   "status": "success",
   "data": {
     "answers": [
-      {
-        "_id": "638cff485deac9d416dc2f4b",
-        "name": "John Smith",
-        "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        "votes": 4
-      },
-      {
-        "_id": "638cff485deac9d416dc2f4c",
-        "name": "Jane Doe",
-        "answer": "Λορεμ ιπσθμ δολορ σιτ αμετ, ει θσθ νιηιλ εσσεντ νοστρθμ, αδ cθμ μεισ cονcεπταμ.",
-        "votes": 7
-      }
+      [
+        {
+          "_id": "638cff485deac9d416dc2f4b",
+          "name": "John Smith",
+          "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+          "votes": 4
+        },
+        {
+          "_id": "638cff485deac9d416dc2f4c",
+          "name": "Jane Doe",
+          "answer": "Λορεμ ιπσθμ δολορ σιτ αμετ, ει θσθ νιηιλ εσσεντ νοστρθμ, αδ cθμ μεισ cονcεπταμ.",
+          "votes": 7
+        }
+      ],
+      [
+        {
+          "_id": "638cff485deac9d416dc2f4b",
+          "name": "John Smith",
+          "answer": "Eget sit amet tellus cras adipiscing.",
+          "votes": 4
+        },
+        {
+          "_id": "638cff485deac9d416dc2f4c",
+          "name": "Jane Doe",
+          "answer": "",
+          "votes": 7
+        }
+      ],
+      [
+        {
+          "_id": "638cff485deac9d416dc2f4b",
+          "name": "John Smith",
+          "answer": "",
+          "votes": 4
+        },
+        {
+          "_id": "638cff485deac9d416dc2f4c",
+          "name": "Jane Doe",
+          "answer": "Ιν cιβο ειθσ ιντελλεγεβατ προ, μει ιδ vερο ταντασ αccθσαμ.",
+          "votes": 7
+        }
+      ],
+      [
+        {
+          "_id": "638cff485deac9d416dc2f4b",
+          "name": "John Smith",
+          "answer": "Odio facilisis mauris sit amet massa. Sed lectus vestibulum mattis ullamcorper velit sed ullamcorper.",
+          "votes": 4
+        },
+        {
+          "_id": "638cff485deac9d416dc2f4c",
+          "name": "Jane Doe",
+          "answer": "Εξ σεδ αccθσαμθσ περτιναcια cομπλεcτιτθρ, ει θβιqθε qθοδσι vισ. Αφφερτ μολλισ qθι αδ, μθcιθσ ιμπεδιτ νεc τε.",
+          "votes": 7
+        }
+      ]
     ]
   }
 }

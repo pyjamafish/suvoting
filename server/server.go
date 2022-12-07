@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"math/rand"
 	"net/http"
@@ -16,6 +17,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+)
+
+const (
+	questionCount = 4
 )
 
 type AppResource struct {
@@ -141,4 +146,103 @@ func (rs *AppResource) PostCandidates(w http.ResponseWriter, r *http.Request) {
 
 	render.Status(r, http.StatusCreated)
 	render.Render(w, r, NewResponseSuccess(nil))
+}
+
+func (rs *AppResource) PatchVotes(w http.ResponseWriter, r *http.Request) {
+	id, err := primitive.ObjectIDFromHex(chi.URLParam(r, "id"))
+	if err != nil {
+		render.Render(w, r, NewErrorResponse("Could not get ObjectID"))
+		return
+	}
+
+	branch := r.Context().Value("branch").(string)
+	collection := rs.Db().Collection(branch)
+
+	_, err = collection.UpdateOne(
+		r.Context(),
+		bson.M{
+			"_id": id,
+		},
+		bson.D{
+			{"$inc", bson.D{{"votes", 1}}},
+		},
+	)
+	if err != nil {
+		render.Render(w, r, NewErrorResponse("Could not increment votes"))
+		return
+	}
+	render.Render(w, r, NewResponseSuccess(nil))
+}
+
+func (rs *AppResource) GetAnswers(w http.ResponseWriter, r *http.Request) {
+	branch := r.Context().Value("branch").(string)
+	collection := rs.Db().Collection(branch)
+
+	cur, err := collection.Find(r.Context(), bson.D{})
+	if err != nil {
+		render.Render(w, r, NewErrorResponse("Could not get cursor from db"))
+		return
+	}
+	defer cur.Close(r.Context())
+
+	var answers [questionCount][]Answer
+	for cur.Next(r.Context()) {
+		candidate := Candidate{}
+		err := cur.Decode(&candidate)
+		if err != nil {
+			render.Render(w, r, NewErrorResponse("Could not decode into candidate"))
+			return
+		}
+
+		for i := 0; i < questionCount; i++ {
+			answer := Answer{
+				Id:     candidate.Id,
+				Name:   candidate.Name,
+				Votes:  candidate.Votes,
+				Answer: candidate.Answers[i],
+			}
+			answers[i] = append(answers[i], answer)
+		}
+	}
+	for i := 0; i < questionCount; i++ {
+		randomize(answers[i])
+	}
+
+	data := map[string]any{
+		"answers": answers,
+	}
+	render.Render(w, r, NewResponseSuccess(data))
+}
+
+func (rs *AppResource) GetLeaderboard(w http.ResponseWriter, r *http.Request) {
+	branch := r.Context().Value("branch").(string)
+	collection := rs.Db().Collection(branch)
+
+	opts := options.Find().SetSort(bson.D{{"votes", -1}})
+	cur, err := collection.Find(r.Context(), bson.D{}, opts)
+	if err != nil {
+		render.Render(w, r, NewErrorResponse("Could not get cursor from db"))
+		return
+	}
+	defer cur.Close(r.Context())
+
+	var leaderboardEntries []LeaderboardEntry
+	for cur.Next(r.Context()) {
+		leaderboardEntry := LeaderboardEntry{}
+		err := cur.Decode(&leaderboardEntry)
+		if err != nil {
+			render.Render(w, r, NewErrorResponse("Could not decode into leaderboard entry"))
+			return
+		}
+
+		leaderboardEntries = append(leaderboardEntries, leaderboardEntry)
+	}
+	data := map[string]any{
+		"leaderboard": leaderboardEntries,
+	}
+	render.Render(w, r, NewResponseSuccess(data))
+}
+
+func (rs *AppResource) GetQuestions(w http.ResponseWriter, r *http.Request) {
+	render.Render(w, r, NewErrorResponse("Not implemented yet"))
 }
